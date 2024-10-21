@@ -253,23 +253,24 @@ export default class InfiniteScroll extends Component<Props, State> {
 
   isElementAtTop(target: HTMLElement, scrollThreshold: string | number = 0.8) {
     const clientHeight =
-      target === document.body || target === document.documentElement
-        ? window.screen.availHeight
-        : target.clientHeight;
+    target === document.body || target === document.documentElement
+      ? window.screen.availHeight
+      : target.clientHeight;
 
-    const threshold = parseThreshold(scrollThreshold);
+  const threshold = parseThreshold(scrollThreshold);
 
-    if (threshold.unit === ThresholdUnits.Pixel) {
-      return (
-        target.scrollTop <=
-        threshold.value + clientHeight - target.scrollHeight + 1
-      );
-    }
-
+  if (threshold.unit === ThresholdUnits.Pixel) {
     return (
-      target.scrollTop <=
-      threshold.value / 100 + clientHeight - target.scrollHeight + 1
+      target.scrollTop <
+        threshold.value + clientHeight - target.scrollHeight ||
+      target.scrollTop === 0
     );
+  }
+  //targe.scrollTop for brave support
+  return (
+    target.scrollTop < threshold.value + clientHeight - target.scrollHeight ||
+    target.scrollTop === 0
+  );
   }
 
   isElementAtBottom(
